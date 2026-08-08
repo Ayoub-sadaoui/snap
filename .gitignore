@@ -1,0 +1,14 @@
+.DS_Store
+node_modules
+**/node_modules
+dist
+**/dist
+build
+**/build
+.vite
+**/.vite
+.netlify
+*.log
+*.tsbuildinfo
+.env
+.env.*

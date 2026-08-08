@@ -1,0 +1,8 @@
+[build]
+command = "pnpm --dir artifacts/snapchat-login build"
+publish = "artifacts/snapchat-login/dist/public"
+
+[build.environment]
+NODE_VERSION = "20"
+PORT = "3000"
+BASE_PATH = "/"
