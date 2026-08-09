@@ -1,9 +1,9 @@
 kind = "web"
 previewPath = "/"
-title = "chkopi Login Clone"
-description = "A pixel-perfect clone of the chkopi login page, featuring the ghost logo, username/email input, phone number toggle, blue Next button, OR divider, and Continue with Google option."
+title = "Snapchat Login Clone"
+description = "A pixel-perfect clone of the Snapchat login page, featuring the ghost logo, username/email input, phone number toggle, blue Next button, OR divider, and Continue with Google option."
 version = "1.0.0"
-id = "artifacts/chkopi-login"
+id = "artifacts/Snapchat-login"
 router = "path"
 
 [[services]]
@@ -12,12 +12,12 @@ paths = [ "/" ]
 localPort = 19487
 
 [services.development]
-run = "pnpm --filter @workspace/chkopi-login run dev"
+run = "pnpm --filter @workspace/Snapchat-login run dev"
 
 [services.production]
-build = [ "pnpm", "--filter", "@workspace/chkopi-login", "run", "build" ]
+build = [ "pnpm", "--filter", "@workspace/Snapchat-login", "run", "build" ]
 serve = "static"
-publicDir = "artifacts/chkopi-login/dist/public"
+publicDir = "artifacts/Snapchat-login/dist/public"
 
 [[services.production.rewrites]]
 from = "/*"

