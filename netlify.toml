@@ -6,3 +6,9 @@ publish = "artifacts/snapchat-login/dist/public"
 NODE_VERSION = "20"
 PORT = "3000"
 BASE_PATH = "/"
+
+# SPA fallback so /login and other client routes work on Netlify
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
