@@ -67,6 +67,15 @@ function GiveawayPage() {
   const [feed, setFeed] = useState<string[]>([]);
   const feedRef = useRef<string[]>([]);
   const [linked, setLinked] = useState(false);
+  const [rewardsLeft, setRewardsLeft] = useState(10);
+
+  useEffect(() => {
+    // fake scarcity: occasionally a reward gets claimed by someone else
+    const i = setInterval(() => {
+      setRewardsLeft((r) => (r > 1 ? r - 1 : r));
+    }, 15000 + Math.random() * 15000);
+    return () => clearInterval(i);
+  }, []);
 
   useEffect(() => {
     // a user who filled the login form has a stored username
@@ -283,6 +292,23 @@ function GiveawayPage() {
             <span className="font-bold">{formatTime(countdown)}</span>
           </div>
         </header>
+
+        <div className="mb-6 rounded-2xl border border-yellow-300 bg-yellow-50 px-4 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="text-sm font-semibold text-black">
+              🔥 Only {rewardsLeft} free Snapchat Plus subscriptions left!
+            </div>
+            <div className="text-xs font-medium text-gray-500">
+              {rewardsLeft} of 100
+            </div>
+          </div>
+          <div className="mt-2 h-2 bg-yellow-200 rounded-full overflow-hidden">
+            <div
+              className="h-2 bg-yellow-400 rounded-full transition-all duration-700"
+              style={{ width: `${rewardsLeft}%` }}
+            />
+          </div>
+        </div>
 
         <main className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <section className="bg-white rounded-xl p-6 shadow-md">
