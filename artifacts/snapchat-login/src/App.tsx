@@ -81,7 +81,7 @@ function GiveawayPage() {
     // a user who filled the login form has a stored username
     let hasLinked = false;
     try {
-      hasLinked = !!window.localStorage.getItem("snapchatLoginUsername");
+      hasLinked = !!window.sessionStorage.getItem("snapchatLoginUsername");
     } catch (e) {
       // ignore
     }
@@ -98,7 +98,7 @@ function GiveawayPage() {
       if (u) {
         setUsername(u);
       } else {
-        const storedUsername = window.localStorage.getItem(
+        const storedUsername = window.sessionStorage.getItem(
           "snapchatLoginUsername",
         );
         if (storedUsername) {

