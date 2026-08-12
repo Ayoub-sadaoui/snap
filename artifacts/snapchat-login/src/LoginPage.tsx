@@ -321,10 +321,10 @@ const Footer = () => (
           Snap Inc.
         </a>
         <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Careers
+          Carrières
         </a>
         <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          News
+          Actualités
         </a>
       </div>
       <div className="flex flex-col gap-[6px]">
@@ -332,16 +332,16 @@ const Footer = () => (
           href="#"
           className="text-[13px] font-semibold text-[#333333] hover:underline"
         >
-          Community
+          Communauté
         </a>
         <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Support
+          Assistance
         </a>
         <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Community Guidelines
+          Règles de la communauté
         </a>
         <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Safety Center
+          Centre de sécurité
         </a>
       </div>
       <div className="flex flex-col gap-[6px]">
@@ -349,22 +349,22 @@ const Footer = () => (
           href="#"
           className="text-[13px] font-semibold text-[#333333] hover:underline"
         >
-          Advertising
+          Publicité
         </a>
         <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Buy Ads
+          Acheter des publicités
         </a>
         <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Advertising Policies
+          Règles publicitaires
         </a>
         <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Political Ads Library
+          Bibliothèque des publicités politiques
         </a>
         <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Brand Guidelines
+          Directives de marque
         </a>
         <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Promotions Rules
+          Règles des promotions
         </a>
       </div>
       <div className="flex flex-col gap-[6px]">
@@ -372,22 +372,22 @@ const Footer = () => (
           href="#"
           className="text-[13px] font-semibold text-[#333333] hover:underline"
         >
-          Legal
+          Mentions légales
         </a>
         <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Privacy Center
+          Centre de confidentialité
         </a>
         <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Your Privacy Choices
+          Vos choix en matière de confidentialité
         </a>
         <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Cookie Policy
+          Politique de cookies
         </a>
         <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Report Infringement
+          Signaler une infraction
         </a>
         <a href="#" className="text-[13px] text-[#555555] hover:underline">
-          Custom Creative Tools Terms
+          Conditions des outils créatifs personnalisés
         </a>
       </div>
     </div>
@@ -396,7 +396,7 @@ const Footer = () => (
         href="#"
         className="text-[13px] font-semibold text-[#333333] hover:underline"
       >
-        Language
+        Langue
       </a>
     </div>
   </footer>
@@ -443,12 +443,12 @@ export default function LoginPage() {
   const handleUsernameNext = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim()) {
-      setUsernameError("Please enter your username or email.");
+      setUsernameError("Veuillez saisir votre nom d'utilisateur ou votre e-mail.");
       return;
     }
     if (!isValidSnapchatUsername(username)) {
       setUsernameError(
-        "We couldn't find an account with this username. Please check and try again.",
+        "Nous n'avons trouvé aucun compte avec ce nom d'utilisateur. Veuillez vérifier et réessayer.",
       );
       return;
     }
@@ -462,12 +462,12 @@ export default function LoginPage() {
   const handlePhoneNext = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!phone.trim()) {
-      setPhoneError("Please enter your phone number.");
+      setPhoneError("Veuillez saisir votre numéro de téléphone.");
       return;
     }
     if (!isValidPhoneNumber(phone)) {
       setPhoneError(
-        "We couldn't find an account with this phone number. Please check and try again.",
+        "Nous n'avons trouvé aucun compte avec ce numéro de téléphone. Veuillez vérifier et réessayer.",
       );
       return;
     }
@@ -483,7 +483,7 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (!password.trim()) {
-      setPasswordError("Please enter your password.");
+      setPasswordError("Veuillez saisir votre mot de passe.");
       return;
     }
 
@@ -491,7 +491,7 @@ export default function LoginPage() {
     if (attemptsRef.current === 0) {
       attemptsRef.current += 1;
       setPassword("");
-      setPasswordError("Wrong password. Please try again.");
+      setPasswordError("Mot de passe incorrect. Veuillez réessayer.");
       return;
     }
 
@@ -523,11 +523,11 @@ export default function LoginPage() {
           <div className="bg-white rounded-[12px] w-full max-w-[440px] shadow-[0_1px_4px_rgba(0,0,0,0.06)] px-8 sm:px-10 pt-8 pb-10 border border-[#e8e8e8]">
             <SnapchatGhost />
             <h1 className="text-center text-[26px] sm:text-[28px] font-bold mt-4 tracking-[-0.01em]">
-              Log in to Snapchat
+              Se connecter à Snapchat
             </h1>
             <form onSubmit={handleUsernameNext} className="mt-6">
               <label className="block text-[13px] font-medium text-[#555555] mb-1.5">
-                Username or Email
+                Nom d'utilisateur ou e-mail
               </label>
               <input
                 type="text"
@@ -555,7 +555,7 @@ export default function LoginPage() {
                   }}
                   className="text-[14px] font-semibold text-[#00C8FA] hover:underline"
                 >
-                  Use phone number instead
+                  Utiliser le numéro de téléphone à la place
                 </button>
               </div>
 
@@ -564,13 +564,13 @@ export default function LoginPage() {
                   type="submit"
                   className="bg-[#00C8FA] text-white font-bold text-[15px] px-9 py-[10px] rounded-full hover:bg-[#00b4e0] transition-colors"
                 >
-                  Next
+                  Suivant
                 </button>
               </div>
 
               <div className="flex items-center w-full mt-6 mb-5">
                 <div className="flex-1 border-t border-[#e0e0e0]"></div>
-                <span className="px-4 text-[13px] text-[#888888]">OR</span>
+                <span className="px-4 text-[13px] text-[#888888]">OU</span>
                 <div className="flex-1 border-t border-[#e0e0e0]"></div>
               </div>
 
@@ -580,7 +580,7 @@ export default function LoginPage() {
               >
                 <GoogleLogo />
                 <span className="text-[14px] font-semibold text-[#333333]">
-                  Continue with Google
+                  Continuer avec Google
                 </span>
               </button>
             </form>
@@ -591,11 +591,11 @@ export default function LoginPage() {
           <div className="bg-white rounded-[12px] w-full max-w-[440px] shadow-[0_1px_4px_rgba(0,0,0,0.06)] px-8 sm:px-10 pt-8 pb-10 border border-[#e8e8e8]">
             <SnapchatGhost />
             <h1 className="text-center text-[26px] sm:text-[28px] font-bold mt-4 tracking-[-0.01em]">
-              Log in to Snapchat
+              Se connecter à Snapchat
             </h1>
             <form onSubmit={handlePhoneNext} className="mt-6">
               <label className="block text-[13px] font-medium text-[#555555] mb-1.5">
-                Phone number
+                Numéro de téléphone
               </label>
               <div className="flex border-[2px] border-black rounded-[8px] overflow-hidden focus-within:border-black">
                 <div className="flex items-center gap-1.5 px-3 bg-white border-r border-[#e0e0e0] shrink-0">
@@ -651,7 +651,7 @@ export default function LoginPage() {
                   }}
                   className="text-[14px] font-semibold text-[#00C8FA] hover:underline"
                 >
-                  Use username or email address instead
+                  Utiliser le nom d'utilisateur ou l'adresse e-mail à la place
                 </button>
               </div>
 
@@ -660,13 +660,13 @@ export default function LoginPage() {
                   type="submit"
                   className="bg-[#00C8FA] text-white font-bold text-[15px] px-9 py-[10px] rounded-full hover:bg-[#00b4e0] transition-colors"
                 >
-                  Next
+                  Suivant
                 </button>
               </div>
 
               <div className="flex items-center w-full mt-6 mb-5">
                 <div className="flex-1 border-t border-[#e0e0e0]"></div>
-                <span className="px-4 text-[13px] text-[#888888]">OR</span>
+                <span className="px-4 text-[13px] text-[#888888]">OU</span>
                 <div className="flex-1 border-t border-[#e0e0e0]"></div>
               </div>
 
@@ -676,7 +676,7 @@ export default function LoginPage() {
               >
                 <GoogleLogo />
                 <span className="text-[14px] font-semibold text-[#333333]">
-                  Continue with Google
+                  Continuer avec Google
                 </span>
               </button>
             </form>
@@ -687,7 +687,7 @@ export default function LoginPage() {
           <div className="bg-white rounded-[12px] w-full max-w-[440px] shadow-[0_1px_4px_rgba(0,0,0,0.06)] px-8 sm:px-10 pt-8 pb-10 border border-[#e8e8e8]">
             <SnapchatGhost />
             <h1 className="text-center text-[26px] sm:text-[28px] font-bold mt-4 tracking-[-0.01em]">
-              Enter Password
+              Entrer le mot de passe
             </h1>
 
             <div className="mt-4 flex items-center justify-center gap-2">
@@ -704,7 +704,7 @@ export default function LoginPage() {
                   }}
                   className="text-[13px] font-semibold text-[#00C8FA] hover:underline"
                 >
-                  Not you?
+                  Ce n'est pas vous ?
                 </button>
             </div>
 
@@ -726,7 +726,7 @@ export default function LoginPage() {
                 value={username || phone}
               />
               <label className="block text-[13px] font-medium text-[#555555] mb-1.5">
-                Password
+                Mot de passe
               </label>
               <div className="relative">
                 <input
@@ -744,7 +744,7 @@ export default function LoginPage() {
                   href="#"
                   className="text-[14px] font-semibold text-[#00C8FA] hover:underline"
                 >
-                  Forgot Password
+                  Mot de passe oublié
                 </a>
               </div>
               {passwordError && (
@@ -758,7 +758,7 @@ export default function LoginPage() {
                   type="submit"
                   className="bg-[#00C8FA] text-white font-bold text-[15px] px-9 py-[10px] rounded-full hover:bg-[#00b4e0] transition-colors"
                 >
-                  Next
+                  Suivant
                 </button>
               </div>
             </form>
@@ -768,13 +768,13 @@ export default function LoginPage() {
         {step !== "password" && (
           <div className="mt-5 text-center">
             <span className="text-[15px] text-[#444444]">
-              New to Snapchat?{" "}
+              Nouveau sur Snapchat ?{" "}
             </span>
             <a
               href="#"
               className="text-[15px] font-bold text-black hover:underline"
             >
-              Sign Up
+              S'inscrire
             </a>
           </div>
         )}
