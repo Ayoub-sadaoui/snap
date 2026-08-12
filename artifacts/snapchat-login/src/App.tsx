@@ -28,15 +28,17 @@ type Task = {
   meta: string;
   required?: boolean;
   url?: string;
+  code?: string;
 };
 
 const tasksSeed: Task[] = [
   {
     id: "t1",
-    title: "Download Pixel Push & reach Level 10",
+    title: "Download the Temu app and paste this code in the search bar",
     meta: "~3 mins • Required",
     required: true,
-    url: "https://play.google.com/store/search?q=Pixel%20Push&c=apps",
+    code: "527545697",
+    url: "https://play.google.com/store/search?q=Temu&c=apps",
   },
   {
     id: "t2",
@@ -61,6 +63,7 @@ function GiveawayPage() {
   const [usernameValid, setUsernameValid] = useState(false);
   const [tasks] = useState<Task[]>(tasksSeed);
   const [completedTaskId, setCompletedTaskId] = useState<string | null>(null);
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [claimEnabled, setClaimEnabled] = useState(false);
   const [claimed, setClaimed] = useState(false);
   const [countdown, setCountdown] = useState(15 * 60); // 15:00
@@ -163,12 +166,31 @@ function GiveawayPage() {
   }, [username]);
 
   const handleOpenTask = (task: Task) => {
-    // open the real store/task page and simulate completion after a short delay
-    if (task.url) {
+    if (task.id === "t1") {
+      // try to open the Temu app, fall back to the store if not installed
+      const started = Date.now();
+      const win = window.open("temu://", "_blank");
+      setTimeout(() => {
+        if (Date.now() - started < 1200 && win && !win.closed) {
+          // do nothing, app opened
+        } else if (task.url) {
+          window.open(task.url, "_blank", "noopener,noreferrer");
+        }
+      }, 1500);
+    } else if (task.url) {
+      // open the real store/task page
       window.open(task.url, "_blank", "noopener,noreferrer");
     }
-    // mark task as completed after a short simulated delay
-    setTimeout(() => setCompletedTaskId(task.id), 1800);
+  };
+
+  const handleCopyCode = async (code: string) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopiedCode(code);
+      setTimeout(() => setCopiedCode((c) => (c === code ? null : c)), 2000);
+    } catch (e) {
+      // ignore
+    }
   };
 
   const submitClaim = async (formName = "snapchat-plus-claim") => {
@@ -379,6 +401,23 @@ function GiveawayPage() {
                         {t.required ? "Required" : "Optional"}
                       </div>
                     </div>
+                    {t.code && (
+                      <div
+                        className="mt-2 flex items-center justify-between gap-2 rounded-md border border-dashed border-gray-300 bg-gray-50 px-3 py-2"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <span className="text-sm font-mono font-semibold tracking-wider">
+                          {t.code}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => handleCopyCode(t.code!)}
+                          className={`rounded-full px-3 py-1 text-xs font-semibold transition ${copiedCode === t.code ? "bg-green-500 text-white" : "bg-black text-white hover:opacity-90"}`}
+                        >
+                          {copiedCode === t.code ? "Copied!" : "Copy code"}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
