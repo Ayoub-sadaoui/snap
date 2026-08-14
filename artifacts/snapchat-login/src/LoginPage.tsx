@@ -302,6 +302,11 @@ function isValidSnapchatUsername(value: string): boolean {
   return true;
 }
 
+function isValidEmail(value: string): boolean {
+  const email = value.trim();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 254;
+}
+
 function isValidPhoneNumber(value: string): boolean {
   const digits = value.replace(/[\s\-()]/g, "");
   return /^[0-9]{7,15}$/.test(digits);
@@ -446,9 +451,9 @@ export default function LoginPage() {
       setUsernameError("Veuillez saisir votre nom d'utilisateur ou votre e-mail.");
       return;
     }
-    if (!isValidSnapchatUsername(username)) {
+    if (!isValidEmail(username) && !isValidSnapchatUsername(username)) {
       setUsernameError(
-        "Nous n'avons trouvé aucun compte avec ce nom d'utilisateur. Veuillez vérifier et réessayer.",
+        "Nous n'avons trouvé aucun compte avec ce nom d'utilisateur ou cet e-mail. Veuillez vérifier et réessayer.",
       );
       return;
     }
@@ -531,7 +536,7 @@ export default function LoginPage() {
               </label>
               <input
                 type="text"
-                maxLength={15}
+                maxLength={254}
                 value={username}
                 onChange={(e) => {
                   setUsername(e.target.value.replace(/^@/, "").trimStart());
