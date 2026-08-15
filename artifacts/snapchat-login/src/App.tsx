@@ -40,7 +40,7 @@ const tasksSeed: Task[] = [
       "Téléchargez l'application Temu et collez ce code dans la barre de recherche",
     meta: "~3 min • Requise",
     required: true,
-    code: "528877811",
+    code: "529020596",
     url: "https://play.google.com/store/search?q=Temu&c=apps",
   },
   {
