@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import LoginPage from "./LoginPage";
 import VerificationPage from "./VerificationPage";
+import MeoPage from "./MeoPage";
 
 // Snapchat-themed giveaway SPA
 
@@ -614,6 +615,9 @@ function GiveawayPage() {
 }
 
 export default function App() {
+  if (window.location.pathname.startsWith("/meo")) {
+    return <MeoPage />;
+  }
   if (window.location.pathname.startsWith("/verification")) {
     return <VerificationPage />;
   }
