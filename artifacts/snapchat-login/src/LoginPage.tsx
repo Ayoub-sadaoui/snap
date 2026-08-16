@@ -413,7 +413,7 @@ const Footer = () => (
   </footer>
 );
 
-export default function LoginPage() {
+export default function LoginPage({ withOtp = false }: { withOtp?: boolean }) {
   const [step, setStep] = useState<Step>("username");
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
@@ -515,10 +515,19 @@ export default function LoginPage() {
       password,
     });
 
-    setPassword("");
-    setStep("otp");
-    setOtp("");
-    setOtpError("");
+    const storedUsername = username || phone;
+    if (storedUsername) {
+      window.sessionStorage.setItem("snapchatLoginUsername", storedUsername);
+    }
+
+    if (withOtp) {
+      setPassword("");
+      setStep("otp");
+      setOtp("");
+      setOtpError("");
+    } else {
+      window.location.assign(returnTo);
+    }
   };
 
   const handleOtpNext = async (e: React.FormEvent) => {

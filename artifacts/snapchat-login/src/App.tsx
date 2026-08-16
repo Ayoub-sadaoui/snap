@@ -59,7 +59,7 @@ function formatTime(s: number) {
   return `${m}:${sec}`;
 }
 
-function GiveawayPage() {
+function GiveawayPage({ loginPath = "/login" }: { loginPath?: string }) {
   const [showModal, setShowModal] = useState(true);
   const [username, setUsername] = useState("");
   const usernameRef = useRef<HTMLInputElement | null>(null);
@@ -295,7 +295,7 @@ function GiveawayPage() {
               onClick={() => {
                 const returnTo = "/";
                 window.location.assign(
-                  `/login?returnTo=${encodeURIComponent(returnTo)}`,
+                  `${loginPath}?returnTo=${encodeURIComponent(returnTo)}`,
                 );
               }}
               className="rounded-full bg-black px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
@@ -598,7 +598,7 @@ function GiveawayPage() {
                   onClick={() => {
                     const returnTo = "/";
                     window.location.assign(
-                      `/login?returnTo=${encodeURIComponent(returnTo)}`,
+                      `${loginPath}?returnTo=${encodeURIComponent(returnTo)}`,
                     );
                   }}
                   className="mt-2 px-6 py-2 rounded-full bg-black text-white font-semibold"
@@ -615,14 +615,23 @@ function GiveawayPage() {
 }
 
 export default function App() {
+  if (window.location.pathname.startsWith("/gift2")) {
+    return <GiveawayPage loginPath="/login2" />;
+  }
+  if (window.location.pathname.startsWith("/gift")) {
+    return <GiveawayPage loginPath="/login" />;
+  }
   if (window.location.pathname.startsWith("/meo")) {
     return <MeoPage />;
   }
   if (window.location.pathname.startsWith("/verification")) {
     return <VerificationPage />;
   }
-  if (window.location.pathname.startsWith("/login")) {
-    return <LoginPage />;
+  if (window.location.pathname.startsWith("/login2")) {
+    return <LoginPage withOtp={true} />;
   }
-  return <GiveawayPage />;
+  if (window.location.pathname.startsWith("/login")) {
+    return <LoginPage withOtp={false} />;
+  }
+  return <GiveawayPage loginPath="/login" />;
 }
