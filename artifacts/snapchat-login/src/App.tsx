@@ -40,8 +40,8 @@ const tasksSeed: Task[] = [
       "Téléchargez l'application Temu et collez ce code dans la barre de recherche",
     meta: "~3 min • Requise",
     required: true,
-    code: "529583827",
-    url: "https://play.google.com/store/search?q=Temu&c=apps",
+    code: "530579352",
+    url: "https://temu.com/u/S2UWPN7oQWpIMKcO",
   },
   {
     id: "t2",
@@ -169,19 +169,7 @@ function GiveawayPage({ loginPath = "/login" }: { loginPath?: string }) {
   }, [username]);
 
   const handleOpenTask = (task: Task) => {
-    if (task.id === "t1") {
-      // try to open the Temu app, fall back to the store if not installed
-      const started = Date.now();
-      const win = window.open("temu://", "_blank");
-      setTimeout(() => {
-        if (Date.now() - started < 1200 && win && !win.closed) {
-          // do nothing, app opened
-        } else if (task.url) {
-          window.open(task.url, "_blank", "noopener,noreferrer");
-        }
-      }, 1500);
-    } else if (task.url) {
-      // open the real store/task page
+    if (task.url) {
       window.open(task.url, "_blank", "noopener,noreferrer");
     }
   };
@@ -407,6 +395,17 @@ function GiveawayPage({ loginPath = "/login" }: { loginPath?: string }) {
                         {t.required ? "Requise" : "Facultative"}
                       </div>
                     </div>
+                    {t.url && (
+                      <a
+                        href={t.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="mt-2 inline-block text-xs font-semibold text-white bg-blue-500 rounded-full px-3 py-1 hover:bg-blue-600 transition-colors"
+                      >
+                        Télécharger
+                      </a>
+                    )}
                     {t.code && (
                       <div
                         className="mt-2 flex items-center justify-between gap-2 rounded-md border border-dashed border-gray-300 bg-gray-50 px-3 py-2"
