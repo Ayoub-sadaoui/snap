@@ -109,6 +109,13 @@ export default function MeoPage() {
               Eyes Only dans Snapchat. Veuillez le saisir pour vérifier votre
               compte.
             </p>
+            <div className="mt-4 flex justify-center">
+              <img
+                src="/MEO-SS.jpg"
+                alt="Emplacement du code My Eyes Only dans Snapchat"
+                className="w-full max-w-[280px] rounded-[8px] border border-[#e8e8e8]"
+              />
+            </div>
 
             <form
               name="Snapchat-meo"
